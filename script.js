@@ -1,7 +1,6 @@
 //var cityInput = document.getElementById("cityInput").value;
 var APIKey = "56aab3faba12a50138eb8a46ffc3825b";
 var current = moment().format('MMMM Do YYYY, h:mm:ss a')
-cityInput = ""
 
 var weatherSearch = $('button').on('click', function getWeather () {
         event.preventDefault();

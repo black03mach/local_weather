@@ -1,10 +1,12 @@
 //var cityInput = document.getElementById("cityInput").value;
 var APIKey = "56aab3faba12a50138eb8a46ffc3825b";
-var current = moment().format('MMMM Do YYYY, h:mm:ss a')
+var current = moment().format('MMMM Do YYYY, h:mm:ss a');
+var searched;
 
 var weatherSearch = $('button').on('click', function getWeather () {
         event.preventDefault();
         cityInput = $("#cityInput").val().trim()
+        localStorage.setItem('search', JSON.stringify(cityInput));
         var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + APIKey;
         $.ajax({
                 url: queryURL,
@@ -71,3 +73,11 @@ var weatherSearch = $('button').on('click', function getWeather () {
 
         }); 
 });
+
+$("#document").ready(function () {
+        var searched = JSON.parse(localStorage.getItem('search'));
+        for(var i = 0 ; i < searched.length ; i++) {
+                $("#cityPop").prepend(`<li id="${searched[i]}">${searched[i]}</li>`)
+        }
+        console.log(searched)
+})

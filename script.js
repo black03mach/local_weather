@@ -1,12 +1,22 @@
 //var cityInput = document.getElementById("cityInput").value;
 var APIKey = "56aab3faba12a50138eb8a46ffc3825b";
 var current = moment().format('MMMM Do YYYY, h:mm:ss a');
-var searched;
+var searched = [];
 
-var weatherSearch = $('button').on('click', function getWeather () {
+var weatherSearch = $('button').on('click', function(){
+        getWeather($("#cityInput").val().trim())
+});
+
+$("#cityPop").on("click", "li", function(){
+        console.log($(this).text())
+        getWeather($(this).text())
+});
+
+function getWeather(cityInput) {
         event.preventDefault();
-        cityInput = $("#cityInput").val().trim()
-        localStorage.setItem('search', JSON.stringify(cityInput));
+        searched.push(cityInput);
+        console.log(searched)
+        localStorage.setItem('search', JSON.stringify(searched));
         var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + APIKey;
         $.ajax({
                 url: queryURL,
@@ -56,10 +66,10 @@ var weatherSearch = $('button').on('click', function getWeather () {
                 $.ajax({
                         url: fiveDay,
                         method: "GET"
-                }).then(function(response3){
+                }).then(function (response3) {
                         console.log(response3)
-                        for (var i = 1 ; i < 6 ; i++) {
-                        var future = moment().add(i, `d`).format('D')
+                        for (var i = 1; i < 6; i++) {
+                                var future = moment().add(i, `d`).format('D')
                                 console.log(future)
                                 $("#" + i + ">.future").text(future);
                                 $("#" + i + ">div>#forecastDaily").attr("src", imageUrl + response3.list[i].weather[0].icon + ".png");
@@ -68,16 +78,25 @@ var weatherSearch = $('button').on('click', function getWeather () {
                                 $("#" + i + ">.forecastTemp").text("Temp: " + fTempFinal + "Degrees");
                                 $("#" + i + ">.forecastHumidity").text("Humidity: " + response3.list[i].main.humidity);
                         }
-                        
+
                 })
 
-        }); 
-});
+        });
+};
+
+
 
 $("#document").ready(function () {
-        var searched = JSON.parse(localStorage.getItem('search'));
-        for(var i = 0 ; i < searched.length ; i++) {
-                $("#cityPop").prepend(`<li id="${searched[i]}">${searched[i]}</li>`)
+        // searched.push
+        searched = (JSON.parse(localStorage.getItem('search')));
+        console.log(searched);
+        if (searched == null) {
+                searched = []
+        } else {
+                for (var i = 0; i < searched.length; i++) {
+                        $("#cityPop").append(`<li>${searched[i]}</li>`)
+                        
+                }
+                console.log(searched)
         }
-        console.log(searched)
 })
